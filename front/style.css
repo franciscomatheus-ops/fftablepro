@@ -1,0 +1,35 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body{
+    height: 100%;
+}
+body{
+    display: grid;
+    place-items: center;
+}
+table, tr, td, th{
+    border: solid 1px;
+    border-collapse: collapse;
+    text-transform: capitalize;
+}
+th, td{
+    text-align: center;
+}
+input{
+    width: 10ch;
+    text-align: center;
+    border: none;
+    outline: none;
+}
+input::-webkit-inner-spin-button{
+    appearance: none;
+}
+.title{
+    font-size: x-small;
+}
+th{
+    padding: 5px;
+}
