@@ -1,6 +1,6 @@
 let xt = [];
 
-let [lines, quedas] = [12, 2]
+let [lines, quedas] = [12, 4]
 
 document.addEventListener('DOMContentLoaded', () => {
     for (let x = 1; x <= quedas; x++) {
@@ -44,8 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('bodytable').appendChild(tr);
         lines[`res${x}`] = 0;
-        xt.push(lines)
+        xt.push(lines);
     }
+    document.getElementById('tdO').setAttribute('colspan', `${quedas * 2 + 2}`)
 })
 
 function LineName(lineid, linename) {
@@ -79,7 +80,7 @@ function LineInfo(IdLine, InfoId, InfoValue, ResValue) {
                 let p = parseInt(line[`pos${n}`]);
                 r += 11 - p + parseInt(line[`abt${n}`]);
             }
-            else if (line[`pos${n}`] >= 11 && line[`pos${n}`] <= 12) {
+            else if (line[`pos${n}`] >= 11 || line[`pos${n}`] == 0) {
                 r += parseInt(line[`abt${n}`]);
             }
         }
@@ -93,11 +94,21 @@ function LineInfo(IdLine, InfoId, InfoValue, ResValue) {
         for (let y in x) {
             if (y == ResValue) {
                 document.getElementById(ResValue).innerText = x[y];
-                console.log(y);
             }
         }
         
     })
+
+    document.getElementById(InfoId).addEventListener('focusout', t(InfoId))
+    
+}
+function t(i) {
+    let idvalue = document.getElementById(i);
+    if (i.includes('pos')) {
+        if (idvalue.value > 12 || idvalue.value.length > 2) {
+            idvalue.value = 0;
+        }
+    }
     
 }
 
@@ -125,7 +136,7 @@ function reordenar() {
                 inp.setAttribute('oninput', 'LineName(this.id, this.value)')
                 td.appendChild(inp);
             }
-            else if (x != 'res') {
+            else if (x != linename.replace('line', 'res')) {
                 inp.value = line[x] != 0 ? line[x] : '';
                 inp.id = x;
                 inp.setAttribute('oninput', `LineInfo(${linename}.id, this.id, this.value, ${linename.replace('line', 'res')}.id)`)
@@ -140,4 +151,3 @@ function reordenar() {
         document.getElementById('bodytable').appendChild(tr);
     })
 }
-
