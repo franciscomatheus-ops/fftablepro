@@ -129,7 +129,10 @@ function TblEnd() {
     let tbldiv = document.getElementById('FullTable');
     tbldiv.innerText = '';
     Lines.sort((a, b) => b.s - a.s);
+    
+    let c = 0;
     Lines.forEach(l => {
+        c++;
         let Pqueda = 0;
         let Pabate = 0;
         for (let x = 1; x <= 5; x++){
@@ -147,9 +150,9 @@ function TblEnd() {
 
         }
         let trLine = document.createElement('tr');
-        for (let y = 1; y <= 4; y++){
+        for (let y = 1; y <= 5; y++){
             let td = document.createElement('td');
-            td.innerText = y == 1 ? l.NameLine : y == 2 ? Pqueda : y == 3 ? Pabate : l.s;
+            td.innerText = y == 1 ? c : y == 2 ? l.NameLine : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
             trLine.appendChild(td);
         }
         tbldiv.appendChild(trLine);
