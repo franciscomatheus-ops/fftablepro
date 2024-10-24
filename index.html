@@ -1,32 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabela</title>
+    <title>Document</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./front/style.css">
     <script src="./back/app.js"></script>
+    <script src="./back/tbl.js"></script>
+    <link rel="stylesheet" href="./fornt/style.css">
 </head>
-
 <body>
-    <table>
-        <thead>
-            <tr id="queda">
-                <th rowspan="2">LINE</th>
-            </tr>
-            <tr id="posabt">
-            </tr>
-        </thead>
-        <tbody id="bodytable">
-        </tbody>
-        <tfoot>
-            <tr>
-                <td onclick="reordenar()" id="tdO">ORGANIZAR TABELA</td>
-            </tr>
-        </tfoot>
-    </table>
-</body>
+    <nav>
+        <div>
+            <span onclick="TabelaEnd()">Tabela</span>
+        </div>
+        <div id="NavBar"></div>
+    </nav>
+    <div id="BodyDiv" class="bodytable">
 
+        <div id="DisplayTable" class="mintable">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Line:</th>
+                        <td colspan="3"><input type="text" oninput="NameLine(this)" id="Line"></td>
+                    </tr>
+                    <tr>
+                        <th>Quedas</th>
+                        <th>Posição</th>
+                        <th>Abates</th>
+                        <th>Pontos</th>
+                    </tr>
+                </thead>
+                <tbody id="BodyTable">
+            
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tablefull" id="divFullTable">
+            <table>
+                <thead>
+                    <tr><td colspan="5">XTREINO DOOM FORCE</td></tr>
+                    <tr>
+                        <td>rank</td>
+                        <td>Equipes</td>
+                        <td>Pontos</td>
+                        <td>Kills</td>
+                        <td>Total</td>
+                    </tr>
+                </thead>
+                <tbody id="FullTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
 </html>
