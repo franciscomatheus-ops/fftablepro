@@ -128,6 +128,7 @@ function TabelaEnd() {
 function TblEnd() {
     let tbldiv = document.getElementById('FullTable');
     tbldiv.innerText = '';
+    Lines.sort((a, b) => b.s - a.s);
     Lines.forEach(l => {
         let Pqueda = 0;
         let Pabate = 0;
