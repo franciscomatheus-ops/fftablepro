@@ -115,6 +115,9 @@ telas grandes 1201px e acima — telas muito grandes,TVs */
         justify-content: center;
         align-items: center;
     }
+    table{
+        font-size: small;
+    }
     nav{
         width: 100%;
         /* min-height: 150px; */
