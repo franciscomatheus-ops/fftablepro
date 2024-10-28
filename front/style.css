@@ -108,7 +108,7 @@ nav div:first-child span:hover{
 laptops 1025px — 1200px: desktops,
 telas grandes 1201px e acima — telas muito grandes,TVs */
 
-@media  (max-width:500px) {
+@media  (max-width:480px) {
     body{
         display: flex;
         flex-direction: column;
@@ -117,12 +117,11 @@ telas grandes 1201px e acima — telas muito grandes,TVs */
     }
     nav{
         width: 100%;
-        min-height: 150px;
+        /* min-height: 150px; */
         display: flex;
         flex-direction: column;
         background-color: lightslategrey;
         color: whitesmoke;
-        overflow: auto;
     }
     #NavBar{
         display: flex;
@@ -132,6 +131,9 @@ telas grandes 1201px e acima — telas muito grandes,TVs */
     #NavBar span{
         width: calc(100% / 6);
         flex-wrap: wrap;
+        font-size: small;
+        display: grid;
+        place-items: center;
     }
     nav div:first-child span{
         padding: 5px;
