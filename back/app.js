@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             })
+            if (endtable) {
+                TabelaEnd();
+            }
         })
     })
 
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             total.innerText = 'Total';
             total.setAttribute('colspan', '3')
             let res = document.createElement('td');
-            res.id = 's'
+            res.id = 's';
             trTotal.append(total, res);
             document.getElementById('BodyTable').appendChild(trTotal);
         }
@@ -127,15 +130,15 @@ function TabelaEnd() {
 
 function TblEnd() {
     let tbldiv = document.getElementById('FullTable');
-    tbldiv.innerText = '';
-    Lines.sort((a, b) => b.s - a.s);
-    
+    tbldiv.innerText = ''; // zera a tabela para poder recriala de maneira correta
+    Lines.sort((a, b) => b.s - a.s); // coloca a tabela em ordem decrescente com base a key (s) que contem a soma dos pontos do time
+
     let c = 0;
-    Lines.forEach(l => {
+    Lines.forEach(l => { // definira quais sao os pontos de abates e colocacao de cada time
         c++;
         let Pqueda = 0;
         let Pabate = 0;
-        for (let x = 1; x <= 5; x++){
+        for (let x = 1; x <= 5; x++) {
             if (l[`p${x}`] == 1) {
                 Pqueda += 12;
                 Pabate += parseInt(l[`a${x}`]);
@@ -150,9 +153,10 @@ function TblEnd() {
 
         }
         let trLine = document.createElement('tr');
-        for (let y = 1; y <= 5; y++){
+        for (let y = 1; y <= 5; y++) {
             let td = document.createElement('td');
-            td.innerText = y == 1 ? c : y == 2 ? l.NameLine : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
+            // a linha abaixo define os valores da celulas td da tabela sendo 1(Colocao do time na tabela), 2(nome da equipe), 3(pontos de colocacao), 4(pontos de abates) e por ultimo pontuaco geral do time 
+            td.innerText = y == 1 ? c : y == 2 ? (l.NameLine.includes(`Line`) ? ' ' : l.NameLine) : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
             trLine.appendChild(td);
         }
         tbldiv.appendChild(trLine);
