@@ -55,6 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             y % 2 == 0 ? inp.id = `p${x}` : inp.id = `a${x}`;
             tr.appendChild(td);
+            if (y == 2) {
+                inp.addEventListener('blur', () => {
+                    let valor = parseInt(inp.value, 10);
+                    while (valor < 1 || valor > 12 || isNaN(valor)) {
+                        valor = prompt('Digite um número que esteja entre 1 e 12!')
+                        inp.value = valor;
+                        ValidacaoQueda(inp, document.getElementById(`r${x}`).id, document.getElementById('s').id)
+                    }
+                })
+            }
         }
         document.getElementById('BodyTable').appendChild(tr);
         if (x == 5) {
@@ -156,7 +166,7 @@ function TblEnd() {
         for (let y = 1; y <= 5; y++) {
             let td = document.createElement('td');
             // a linha abaixo define os valores da celulas td da tabela sendo 1(Colocao do time na tabela), 2(nome da equipe), 3(pontos de colocacao), 4(pontos de abates) e por ultimo pontuaco geral do time 
-            td.innerText = y == 1 ? c : y == 2 ? (l.NameLine.includes(`Line`) ? ' ' : l.NameLine) : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
+            td.innerText = y == 1 ? c : y == 2 ? (!l.NameLine.includes('Line') ? l.NameLine : l.s > 0 ? 'Undefield' : '') : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
             trLine.appendChild(td);
         }
         tbldiv.appendChild(trLine);
