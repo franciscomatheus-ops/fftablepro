@@ -58,8 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (y == 2) {
                 inp.addEventListener('blur', () => {
                     let valor = parseInt(inp.value, 10);
-                    while (valor < 1 || valor > 12 || isNaN(valor)) {
-                        valor = prompt('Digite um número que esteja entre 1 e 12!')
+                    while (valor < 1 || valor > 12 || isNaN(valor) || valor == null) {
+                        if (valor == null) { break }
+                        valor = prompt("Digite um número que esteja entre 1 e 12!")
                         inp.value = valor;
                         ValidacaoQueda(inp, document.getElementById(`r${x}`).id, document.getElementById('s').id)
                     }
