@@ -12,7 +12,10 @@ html, body{
 }
 body{
     display: flex;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Signika Negative", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: oblique;
     overflow: hidden;
     color: black;
 }
