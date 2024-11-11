@@ -1,21 +1,25 @@
 window.Lines = [
-    { LineID: 'Line_01', NameLine: 'Line 01', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_02', NameLine: 'Line 02', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_03', NameLine: 'Line 03', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_04', NameLine: 'Line 04', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_05', NameLine: 'Line 05', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_06', NameLine: 'Line 06', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_07', NameLine: 'Line 07', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_08', NameLine: 'Line 08', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_09', NameLine: 'Line 09', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_10', NameLine: 'Line 10', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_11', NameLine: 'Line 11', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 },
-    { LineID: 'Line_12', NameLine: 'Line 12', p1: 0, p2: 0, p3: 0, p4: 0, p5: 0, a1: 0, a2: 0, a3: 0, a4: 0, a5: 0, s: 0 }
+    { LineID: 'Line_01', NameLine: 'Line 01', s: 0 },
+    { LineID: 'Line_02', NameLine: 'Line 02', s: 0 },
+    { LineID: 'Line_03', NameLine: 'Line 03', s: 0 },
+    { LineID: 'Line_04', NameLine: 'Line 04', s: 0 },
+    { LineID: 'Line_05', NameLine: 'Line 05', s: 0 },
+    { LineID: 'Line_06', NameLine: 'Line 06', s: 0 },
+    { LineID: 'Line_07', NameLine: 'Line 07', s: 0 },
+    { LineID: 'Line_08', NameLine: 'Line 08', s: 0 },
+    { LineID: 'Line_09', NameLine: 'Line 09', s: 0 },
+    { LineID: 'Line_10', NameLine: 'Line 10', s: 0 },
+    { LineID: 'Line_11', NameLine: 'Line 11', s: 0 },
+    { LineID: 'Line_12', NameLine: 'Line 12', s: 0 }
 ]
 let [newID, oldID] = ['Line_01', ''];
+let Quedas = 4;
 document.addEventListener('DOMContentLoaded', () => {
-    TblEnd()
     Lines.forEach(l => {
+        for (let k = 1; k <= Quedas; k++) {
+            l[`p${k}`] = 0;
+            l[`a${k}`] = 0;
+        }
         let nav = document.getElementById('NavBar');
         let tagLines = document.createElement('span');
         newID == l.LineID ? tagLines.classList.add('ativ') : tagLines.classList.remove('ativ');
@@ -25,12 +29,12 @@ document.addEventListener('DOMContentLoaded', () => {
         tagLines.addEventListener('click', () => {
             oldID = newID;
             newID = tagLines.id;
-            document.getElementById(newID).classList.add('ativ');
             document.getElementById(oldID).classList.remove('ativ');
+            document.getElementById(newID).classList.add('ativ');
             Lines.forEach(x => {
                 if (x.LineID == newID) {
                     document.getElementById('Line').value = x.NameLine.includes('Line') ? '' : x.NameLine;
-                    for (let y = 1; y <= 5; y++) {
+                    for (let y = 1; y <= Quedas; y++) {
                         document.getElementById(`p${y}`).value = x[`p${y}`] != 0 ? x[`p${y}`] : '';
                         document.getElementById(`a${y}`).value = x[`a${y}`] != 0 ? x[`a${y}`] : '';
                         ValidacaoQueda(document.getElementById(`p${y}`), document.getElementById(`r${y}`).id, document.getElementById(`s`).id)
@@ -42,8 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
     })
+    TblEnd();
+    Inicio();
+})
 
-    for (let x = 1; x <= 5; x++) {
+function Inicio() {
+    document.getElementById('BodyTable').innerHTML = '';
+    for (let x = 1; x <= Quedas; x++) {
         let tr = document.createElement('tr');
         for (let y = 1; y <= 4; y++) {
             let td = document.createElement('td');
@@ -68,18 +77,38 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         document.getElementById('BodyTable').appendChild(tr);
-        if (x == 5) {
-            let trTotal = document.createElement('tr');
-            let total = document.createElement('td');
-            total.innerText = 'Total';
-            total.setAttribute('colspan', '3')
-            let res = document.createElement('td');
-            res.id = 's';
-            trTotal.append(total, res);
-            document.getElementById('BodyTable').appendChild(trTotal);
-        }
     }
-})
+    Lines.forEach(x => {
+        if (x.LineID == newID) {
+            document.getElementById('Line').value = x.NameLine.includes('Line') ? '' : x.NameLine;
+            for (let y = 1; y <= Quedas; y++) {
+                document.getElementById(`p${y}`).value = x[`p${y}`] != 0 ? x[`p${y}`] : '';
+                document.getElementById(`a${y}`).value = x[`a${y}`] != 0 ? x[`a${y}`] : '';
+                ValidacaoQueda(document.getElementById(`p${y}`), document.getElementById(`r${y}`).id, document.getElementById(`s`).id)
+            }
+        }
+    })
+}
+
+function addrem(btn) {
+
+    if (btn.innerHTML == '+') {
+        Quedas++;
+        Lines.forEach(line => {
+            line[`p${Quedas}`] = 0;
+            line[`a${Quedas}`] = 0;
+        })
+    }
+    else if (btn.innerHTML == '-' && Quedas > 1) {
+        Lines.forEach(line => {
+            delete line[`p${Quedas}`];
+            delete line[`a${Quedas}`];
+        })
+        Quedas--;
+    }
+    console.log(Quedas);
+    Inicio();
+}
 
 function NameLine(inp) {
     Lines.forEach(l => {
@@ -134,7 +163,6 @@ function ValidacaoQueda(i, r, s) {
 let endtable = false;
 function TabelaEnd() {
     endtable = endtable ? false : true;
-    // document.getElementById('divFullTable').style.zIndex = endtable ? '1' : '-1';
     document.getElementById('divFullTable').style.top = endtable ? '0' : '100%';
     TblEnd();
 }
