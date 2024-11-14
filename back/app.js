@@ -1,4 +1,4 @@
-window.Lines = [
+let Lines = [
     { LineID: 'Line_01', NameLine: 'Line 01', s: 0 },
     { LineID: 'Line_02', NameLine: 'Line 02', s: 0 },
     { LineID: 'Line_03', NameLine: 'Line 03', s: 0 },
@@ -15,6 +15,7 @@ window.Lines = [
 let [newID, oldID] = ['Line_01', ''];
 let Quedas = 4;
 document.addEventListener('DOMContentLoaded', () => {
+    
     Lines.forEach(l => {
         for (let k = 1; k <= Quedas; k++) {
             l[`p${k}`] = 0;
