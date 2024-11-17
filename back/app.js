@@ -171,7 +171,14 @@ function TabelaEnd() {
 function TblEnd() {
     let tbldiv = document.getElementById('FullTable');
     tbldiv.innerText = ''; // zera a tabela para poder recriala de maneira correta
-    Lines.sort((a, b) => b.s - a.s); // coloca a tabela em ordem decrescente com base a key (s) que contem a soma dos pontos do time
+    Lines.sort((a, b) => {
+        if (a.s == b.s) {
+            return b.a - a.a;
+        }
+        else {
+            return b.s - a.s;
+        }
+    }); // coloca a tabela em ordem decrescente com base a key (s) que contem a soma dos pontos do time
 
     let c = 0;
     Lines.forEach(l => { // definira quais sao os pontos de abates e colocacao de cada time
@@ -192,6 +199,7 @@ function TblEnd() {
             }
 
         }
+        l.a = Pabate;
         let trLine = document.createElement('tr');
         for (let y = 1; y <= 5; y++) {
             let td = document.createElement('td');
