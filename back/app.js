@@ -1,26 +1,49 @@
-let Lines = [
-    { LineID: 'Line_01', NameLine: 'Line 01', s: 0 },
-    { LineID: 'Line_02', NameLine: 'Line 02', s: 0 },
-    { LineID: 'Line_03', NameLine: 'Line 03', s: 0 },
-    { LineID: 'Line_04', NameLine: 'Line 04', s: 0 },
-    { LineID: 'Line_05', NameLine: 'Line 05', s: 0 },
-    { LineID: 'Line_06', NameLine: 'Line 06', s: 0 },
-    { LineID: 'Line_07', NameLine: 'Line 07', s: 0 },
-    { LineID: 'Line_08', NameLine: 'Line 08', s: 0 },
-    { LineID: 'Line_09', NameLine: 'Line 09', s: 0 },
-    { LineID: 'Line_10', NameLine: 'Line 10', s: 0 },
-    { LineID: 'Line_11', NameLine: 'Line 11', s: 0 },
-    { LineID: 'Line_12', NameLine: 'Line 12', s: 0 }
-]
-let [newID, oldID] = ['Line_01', ''];
-let Quedas = 4;
+if (!localStorage.getItem('Lines')) {
+    let NLines = [
+        { LineID: 'Line_01', NameLine: 'Line 01', s: 0 },
+        { LineID: 'Line_02', NameLine: 'Line 02', s: 0 },
+        { LineID: 'Line_03', NameLine: 'Line 03', s: 0 },
+        { LineID: 'Line_04', NameLine: 'Line 04', s: 0 },
+        { LineID: 'Line_05', NameLine: 'Line 05', s: 0 },
+        { LineID: 'Line_06', NameLine: 'Line 06', s: 0 },
+        { LineID: 'Line_07', NameLine: 'Line 07', s: 0 },
+        { LineID: 'Line_08', NameLine: 'Line 08', s: 0 },
+        { LineID: 'Line_09', NameLine: 'Line 09', s: 0 },
+        { LineID: 'Line_10', NameLine: 'Line 10', s: 0 },
+        { LineID: 'Line_11', NameLine: 'Line 11', s: 0 },
+        { LineID: 'Line_12', NameLine: 'Line 12', s: 0 }
+    ]
+    localStorage.setItem('Lines', JSON.stringify(NLines));
+}
+if (!localStorage.getItem('Quedas')) {
+    localStorage.setItem('Quedas', 4);
+}
+if (!localStorage.getItem('newID')) {
+    localStorage.setItem('newID', 'Line_01')
+}
+if (!localStorage.getItem('oldID')) {
+    localStorage.setItem('oldID', '')
+}
+let [newID, oldID] = [localStorage.getItem('newID'), localStorage.getItem('oldID')];
+let Lines = JSON.parse(localStorage.getItem('Lines'));
+let Quedas = localStorage.getItem('Quedas');
+
 document.addEventListener('DOMContentLoaded', () => {
-    
+    Lines.sort((a, b) => {
+        let vl1 = parseInt(a.LineID.replace('Line_', ''));
+        let vl2 = parseInt(b.LineID.replace('Line_', ''));
+        return vl1 - vl2;
+    })
     Lines.forEach(l => {
         for (let k = 1; k <= Quedas; k++) {
-            l[`p${k}`] = 0;
-            l[`a${k}`] = 0;
+
+            !l[`p${k}`] ? l[`p${k}`] = 0 : l[`p${1}`] == 0 ? 0 : l[`p${k}`];
+            !l[`a${k}`] ? l[`a${k}`] = 0 : l[`a${1}`] == 0 ? 0 : l[`a${k}`];
+
+            // l[`p${k}`] == 0 ? 0 : l[`p${k}`];
+            // l[`a${k}`] == 0 ? 0 : l[`a${k}`];
         }
+
         let nav = document.getElementById('NavBar');
         let tagLines = document.createElement('span');
         newID == l.LineID ? tagLines.classList.add('ativ') : tagLines.classList.remove('ativ');
@@ -45,10 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (endtable) {
                 TabelaEnd();
             }
+            localStorage.setItem('newID', newID);
+            localStorage.setItem('oldID', oldID);
         })
     })
     TblEnd();
     Inicio();
+    localStorage.setItem('Lines', JSON.stringify(Lines))
 })
 
 function Inicio() {
@@ -93,7 +119,7 @@ function Inicio() {
 
 function addrem(btn) {
 
-    if (btn.innerHTML == '+') {
+    if (btn.innerHTML == '+' && Quedas < 10) {
         Quedas++;
         Lines.forEach(line => {
             line[`p${Quedas}`] = 0;
@@ -107,7 +133,7 @@ function addrem(btn) {
         })
         Quedas--;
     }
-    console.log(Quedas);
+    localStorage.setItem('Quedas', Quedas);
     Inicio();
 }
 
@@ -125,6 +151,7 @@ function ValidacaoQueda(i, r, s) {
             for (let x in l) {
                 if (x == i.id) {
                     l[x] = i.value
+                    localStorage.setItem('Lines', JSON.stringify(Lines))
                 }
             }
         }
@@ -160,6 +187,7 @@ function ValidacaoQueda(i, r, s) {
             document.getElementById(s).innerHTML = v.s != 0 ? v.s : '';
         }
     })
+    localStorage.setItem('Lines', JSON.stringify(Lines));
 }
 let endtable = false;
 function TabelaEnd() {
@@ -171,14 +199,7 @@ function TabelaEnd() {
 function TblEnd() {
     let tbldiv = document.getElementById('FullTable');
     tbldiv.innerText = ''; // zera a tabela para poder recriala de maneira correta
-    Lines.sort((a, b) => {
-        if (a.s == b.s) {
-            return b.a - a.a;
-        }
-        else {
-            return b.s - a.s;
-        }
-    }); // coloca a tabela em ordem decrescente com base a key (s) que contem a soma dos pontos do time
+    Lines.sort((a, b) => b.s - a.s); // coloca a tabela em ordem decrescente com base a key (s) que contem a soma dos pontos do time
 
     let c = 0;
     Lines.forEach(l => { // definira quais sao os pontos de abates e colocacao de cada time
@@ -199,7 +220,6 @@ function TblEnd() {
             }
 
         }
-        l.a = Pabate;
         let trLine = document.createElement('tr');
         for (let y = 1; y <= 5; y++) {
             let td = document.createElement('td');
