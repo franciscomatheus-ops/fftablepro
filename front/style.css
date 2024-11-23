@@ -33,7 +33,8 @@ nav span{
     transition: 500ms;
     letter-spacing: 1px;
     text-transform: capitalize;
-}
+}
+
 
 .bodytable{
     /* background-color: lightgray; */
@@ -120,12 +121,12 @@ input::-webkit-inner-spin-button{
     color: azure;
     /* padding: 12px; */
 }
-nav div:last-child span:hover{
+nav div span:hover:not(.ativ){
     background-color: rgb(144, 163, 183);
 }
-nav div:first-child span:hover{
+/* nav div:first-child span:hover{
     background-color: rgb(132, 165, 197);
-}
+} */
 
 /* 320px — 480px: dispositivos móveis 
 481px — 768px: iPads, tablets
