@@ -48,6 +48,8 @@ let Quedas = localStorage.getItem('Quedas');
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    localStorage.clear();
+    
     Lines.sort((a, b) => {
         let vl1 = parseInt(a.LineID.replace('Line_', ''));
         let vl2 = parseInt(b.LineID.replace('Line_', ''));
