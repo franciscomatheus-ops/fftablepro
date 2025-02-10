@@ -1,22 +1,40 @@
 if (!localStorage.getItem('Lines')) {
-    let NLines = [
-        { LineID: 'Line_01', NameLine: 'Line 01', s: 0 },
-        { LineID: 'Line_02', NameLine: 'Line 02', s: 0 },
-        { LineID: 'Line_03', NameLine: 'Line 03', s: 0 },
-        { LineID: 'Line_04', NameLine: 'Line 04', s: 0 },
-        { LineID: 'Line_05', NameLine: 'Line 05', s: 0 },
-        { LineID: 'Line_06', NameLine: 'Line 06', s: 0 },
-        { LineID: 'Line_07', NameLine: 'Line 07', s: 0 },
-        { LineID: 'Line_08', NameLine: 'Line 08', s: 0 },
-        { LineID: 'Line_09', NameLine: 'Line 09', s: 0 },
-        { LineID: 'Line_10', NameLine: 'Line 10', s: 0 },
-        { LineID: 'Line_11', NameLine: 'Line 11', s: 0 },
-        { LineID: 'Line_12', NameLine: 'Line 12', s: 0 }
-    ]
-    localStorage.setItem('Lines', JSON.stringify(NLines));
+    fetch('back/dados.json') // Caminho para o arquivo JSON
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // Converte a resposta em JSON
+        })
+        .then(data => {
+            console.log('Dados carregados com sucesso:', data);
+            // Aqui você pode manipular os dados como quiser
+            // Por exemplo, armazenar no localStorage ou atualizar a interface
+            localStorage.setItem('Lines', JSON.stringify(data));
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os dados:', error);
+        });
 }
 if (!localStorage.getItem('Quedas')) {
-    localStorage.setItem('Quedas', 4);
+    fetch('back/quedas.json') // Caminho para o arquivo JSON
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json(); // Converte a resposta em JSON
+        })
+        .then(data => {
+            console.log('Dados carregados com sucesso:', data);
+            // Aqui você pode manipular os dados como quiser
+            // Por exemplo, armazenar no localStorage ou atualizar a interface
+            localStorage.setItem('Quedas', JSON.stringify(data));
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os dados:', error);
+        });
 }
 if (!localStorage.getItem('newID')) {
     localStorage.setItem('newID', 'Line_01')
@@ -29,6 +47,7 @@ let Lines = JSON.parse(localStorage.getItem('Lines'));
 let Quedas = localStorage.getItem('Quedas');
 
 document.addEventListener('DOMContentLoaded', () => {
+
     Lines.sort((a, b) => {
         let vl1 = parseInt(a.LineID.replace('Line_', ''));
         let vl2 = parseInt(b.LineID.replace('Line_', ''));
@@ -75,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     TblEnd();
     Inicio();
     localStorage.setItem('Lines', JSON.stringify(Lines))
+    saveLinesToPHP();
 })
 function Inicio() {
     document.getElementById('BodyTable').innerHTML = '';
@@ -117,7 +137,6 @@ function Inicio() {
 }
 
 function addrem(btn) {
-
     if (btn.innerHTML == '+' && Quedas < 10) {
         Quedas++;
         Lines.forEach(line => {
@@ -133,16 +152,20 @@ function addrem(btn) {
         Quedas--;
     }
     localStorage.setItem('Quedas', Quedas);
+    saveQuedasToPHP();
     Inicio();
 }
+
 
 function NameLine(inp) {
     Lines.forEach(l => {
         if (l.LineID == newID) {
-            l.NameLine = inp.value;
+            l.NameLine = inp.value != '' ? inp.value : newID.replace("_", " ");
             document.getElementById(newID).innerText = inp.value != '' ? inp.value : newID.replace("_", " ");
         }
     })
+    localStorage.setItem('Lines', JSON.stringify(Lines))
+    saveLinesToPHP();
 }
 function ValidacaoQueda(i, r, s) {
     Lines.forEach(l => {
@@ -187,6 +210,7 @@ function ValidacaoQueda(i, r, s) {
         }
     })
     localStorage.setItem('Lines', JSON.stringify(Lines));
+    saveLinesToPHP();
 }
 let endtable = false;
 function TabelaEnd() {
@@ -231,9 +255,33 @@ function TblEnd() {
         for (let y = 1; y <= 5; y++) {
             let td = document.createElement('td');
             // a linha abaixo define os valores da celulas td da tabela sendo 1(Colocao do time na tabela), 2(nome da equipe), 3(pontos de colocacao), 4(pontos de abates) e por ultimo pontuaco geral do time 
-            td.innerText = y == 1 ? c : y == 2 ? (!l.NameLine.includes('Line') ? l.NameLine : l.s > 0 ? 'Undefield' : '') : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
+            td.innerText = y == 1 ? c : y == 2 ? (!l.NameLine.includes('Line') ? l.NameLine : l.s > 0 ? l.LineID.replace("_", " ") : '') : y == 3 ? Pqueda : y == 4 ? Pabate : l.s;
             trLine.appendChild(td);
         }
         tbldiv.appendChild(trLine);
     })
+}
+
+
+function saveLinesToPHP() {
+    let linesData = JSON.stringify(Lines); // Converte o objeto Lines em uma string JSON
+    fetch('back/app.php?dados=' + encodeURIComponent(linesData))
+        .then(response => response.text())
+        .then(data => {
+            console.log('Dados salvos com sucesso:');
+        })
+        .catch(error => {
+            console.error('Erro ao salvar os dados:', error);
+        });
+}
+function saveQuedasToPHP() {
+    let linesData = JSON.stringify(Quedas); // Converte o objeto Lines em uma string JSON
+    fetch('back/app.php?q=' + encodeURIComponent(linesData))
+        .then(response => response.text())
+        .then(data => {
+            console.log('Dados salvos com sucesso:');
+        })
+        .catch(error => {
+            console.error('Erro ao salvar os dados:', error);
+        });
 }
