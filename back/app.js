@@ -49,7 +49,7 @@ let Quedas = localStorage.getItem('Quedas');
 document.addEventListener('DOMContentLoaded', () => {
 
     localStorage.clear();
-    
+
     Lines.sort((a, b) => {
         let vl1 = parseInt(a.LineID.replace('Line_', ''));
         let vl2 = parseInt(b.LineID.replace('Line_', ''));
@@ -195,7 +195,7 @@ function ValidacaoQueda(i, r, s) {
 
     Lines.forEach(v => {
         let res = 0;
-        for (let x = 1; x <= 5; x++) {
+        for (let x = 1; x <= Quedas; x++) {
             if (v[`p${x}`] == 1) {
                 res += 12 + parseInt(v[`a${x}`]);
             }
@@ -238,7 +238,7 @@ function TblEnd() {
         c++;
         let Pqueda = 0;
         let Pabate = 0;
-        for (let x = 1; x <= 5; x++) {
+        for (let x = 1; x <= Quedas; x++) {
             if (l[`p${x}`] == 1) {
                 Pqueda += 12;
                 Pabate += parseInt(l[`a${x}`]);
