@@ -145,8 +145,6 @@ input::-webkit-inner-spin-button{
 .btnSwitch{
     cursor: pointer;
 }
-
-
 .corpo{
     overflow-x: scroll;
     padding: 60px;
