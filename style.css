@@ -145,7 +145,7 @@ input::-webkit-inner-spin-button{
 .btnSwitch{
     cursor: pointer;
 }
-.corpo{
+.minTable{
     overflow-x: scroll;
     padding: 60px;
 }
