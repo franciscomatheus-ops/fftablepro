@@ -263,7 +263,7 @@ function ShowFullTable() {
         let p = 0;
         let a = 0;
         for (let x = 1; x <= table.Menu.Quedas; x++) {
-            p += l[`p${x}`];
+            p += l[`a${x}`] >= l[`p${x}`] ? 0 : l[`p${x}`] - l[`a${x}`];
             a += l[`a${x}`];
         }
         document.getElementById('tbodyEnd').innerHTML += `
@@ -276,7 +276,7 @@ function ShowFullTable() {
             </tr>
         `;
     });
-    SendArray(table);
+    // SendArray(table);
 }
 
 
