@@ -276,7 +276,7 @@ function ShowFullTable() {
             </tr>
         `;
     });
-    // SendArray(table);
+    SendArray(table);
 }
 
 
