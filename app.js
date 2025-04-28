@@ -191,7 +191,7 @@ function ValueUpdate(id, value, ponto) {
                 console.log(a);
 
                 if(id.includes(5)){
-                    l[`p${x}`] = l[`q${x}`] == 1 ? (12*2) + (l[`a${x}`] * 2) : l[`q${x}`] >= 2 && l[`q${x}`] <= 10 ? (11 - l[`q${x}`]) + (l[`a${x}`] * 2) : (l[`a${x}`] * 2);
+                    l[`p${x}`] = l[`q${x}`] == 1 ? (12*2) + (l[`a${x}`] * 2) : l[`q${x}`] >= 2 && l[`q${x}`] <= 10 ? ((11 - l[`q${x}`]) * 2) + (l[`a${x}`] * 2) : (l[`a${x}`] * 2);
                     r += l[`p${x}`];
                 }
                 else{
