@@ -51,6 +51,7 @@ input {
     }
     & .LineActive{
         background-color: rgb(16, 127, 218);
+        color: aliceblue;
     }
 }
 
@@ -168,4 +169,13 @@ input::-webkit-inner-spin-button{
 .minTable{
     overflow-x: scroll;
     padding: 60px;
+}
+@media(max-width:500px) {
+    #LinesTags span{
+        font-size: smaller;
+    }
+    th, td{
+        font-size: smaller;
+    }
+    
 }
