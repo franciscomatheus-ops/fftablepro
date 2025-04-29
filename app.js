@@ -96,9 +96,21 @@ function CriacaoTwoTables() {
                 <td><input id=j4 type=text placeholder=Jogador4 oninput="RenamePlayer(this.id, this.value)"></td>
             </tr>
             ${PartidasAbates}
-        </table>                                            
+        </table>        
+        <span class="removTbl" onclick="remTbl()">Apagar Tabela</span>                                    
     `;
     validarTable();
+}
+
+function remTbl(){
+    var a = confirm('Deseja mesmo apagar todos os dados da tabela?');
+    if(a){
+        localStorage.clear();
+        window.location.reload();
+    }
+    else{
+        alert('Voçê desistiu da ação!')
+    }
 }
 
 function SwitchTbl(key) {
