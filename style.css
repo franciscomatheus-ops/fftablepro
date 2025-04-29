@@ -70,10 +70,30 @@ td{
         position: absolute;
         width: 100%;
         height: 100%;
+        z-index: 0;
     }
     & .minTable{
         display: grid;
         place-items: center;
+    }
+    & .removTbl{
+        position: absolute;
+        display: block;
+        width: 80%;
+        border-radius: 12px;
+        padding: 10px;
+        text-align: center;
+        color: whitesmoke;
+        border: solid 1px red;
+        background-color: rgb(238, 61, 61);
+        text-transform: uppercase;
+        cursor: pointer;
+        bottom: 20px;
+        z-index: 1;
+        transition: linear 300ms;
+    }
+    & .removTbl:hover{
+        box-shadow: 0px 0px 15px 5px  rgb(238, 61, 61);
     }
     & .fullTable{
         display: flex;
