@@ -1,0 +1,664 @@
+<!-- objetivo inicial criar um site com 3 abas (equipes, eliminações e tabela) -->
+<!-- em equipes usaremos o conceito da tabela ff-table.netelify.app -->
+<!-- em eliminacoe sera parecido porem trocano posicao por nome de player e eliminacao seria individual -->
+<!-- em tabela deve ser exibida  a pontuacao e tambem o top 3 mvp do dia -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela - Free Fire</title>
+    <style>
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+:root{
+    --ativ: #99b9c6;
+    --menu: #ffffff;
+    --hover: #c2d8e3;
+    --text: #222;   
+}
+html, body{
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+body{
+    display: flex;
+    flex-direction: column;
+}
+body::-webkit-scrollbar{
+    appearance: none;
+}
+header{
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background-color: var(--menu);
+}
+header div:first-child{
+    display: flex;
+}
+header div:first-child span{
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: solid 1px #000;
+    transition: 300ms;
+}
+header div:first-child span:not(:last-child){
+    border-right: solid 1px #000;
+}
+.opc_ativ{
+    background-color: var(--ativ);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.opc_chose{
+    display: flex;
+    flex-wrap: wrap;
+}
+.opc_chose span{
+    display: flex;
+    width: calc(100% / 4);
+    padding: 5px;
+    font-size: 0.8rem;
+    justify-content: center;
+    cursor: pointer;
+    text-transform: capitalize;
+}
+.line_ativ{
+    border: white;
+    background-color: var(--ativ);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+header span:hover, header span:hover{
+    background-color: var(--hover);
+    color: var(--text);
+}
+.body{
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+}
+.pontuacao{
+    width: 100%;
+    max-width: 500px;
+}
+.pontuacao, .pontuacao tr, .pontuacao td, .abates ,.abates tr, .abates td{
+    border: solid 1px #000;
+    border-collapse: collapse;
+}
+.pontuacao thead tr:last-child td{
+    padding: 8px;
+}
+td{
+    text-align: center;
+}
+.pontuacao thead input{
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+.pontuacao tfoot td{
+    padding: 10px;
+}
+.pontuacao tbody tr td{
+    width: calc(100% /4);
+}
+.pontuacao tbody input{
+    display: block;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+}
+.abates{
+    width: 100%;
+    max-width: 600px;
+}
+.abates thead tr:not(:first-child){
+    font-size: x-small;
+}
+.abates thead tr td{
+    padding: 5px;
+}
+.abates tbody input{
+    display: block;
+    width: 100%;
+    padding: 5px;
+    text-align: center;
+}
+.tabela{
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    height: 100%;
+}
+.pontos, .pontos tr, .pontos td{
+    border: solid 1px #000;
+    border-collapse: collapse;
+}
+.pontos td{
+    padding: 10px;
+    font-size: 0.8rem;
+}
+.pontos{
+    width: 100%;
+    max-width: 500px;
+}
+input{
+    outline: none;
+    border: none;
+}
+.remvTbl{
+    display: block;
+    width: 100%;
+    padding: 7px;
+    background-color: rgb(231, 41, 41);
+    color: #fff;
+    font-size: 0.8rem;
+    border-radius: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: linear 150ms;
+}
+.remvTbl:hover{
+    background-color: rgb(231, 41, 41, 0.8);
+    font-size: 0.85rem;
+}
+@media(max-width: 500px){
+    body{
+        font-size: xx-small;
+    }
+}
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div id="opc">
+            <span class="opc_ativ" onclick="menu(this.innerText, opc_chose)" id="Equipes">Equipes</span>
+            <span onclick="menu(this.innerText, opc_chose)" id="Jogadores">Jogadores</span>
+            <span onclick="menu(this.innerText, opc_chose)" id="Tabela">Tabela</span>
+        </div>
+        <div id="opc_chose" class="opc_chose"></div>
+    </header>
+    <div id="main" class="body">
+        
+    </div>
+    <script>
+let opcClass = ['Equipes', 'Jogadores', 'Tabela'];
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (!localStorage.getItem('Menu')) {
+        let menu = {
+            quedas: 5,
+            opcMenu: 'Equipes',
+            opcLine: 'l1'
+        }
+        localStorage.setItem('Menu', JSON.stringify(menu));
+    }
+    if (!localStorage.getItem('Equipes')) {
+        let eqp = [];
+        for (let i = 0; i < 12; i++) {
+            eqp.push({
+                nome: `Line ${i + 1}`,
+                id: `l${i + 1}`,
+                q1: 0,
+                a1: 0,
+                q2: 0,
+                a2: 0,
+                q3: 0,
+                a3: 0,
+                q4: 0,
+                a4: 0,
+                q5: 0,
+                a5: 0,
+                total: 0,
+                jogadores: {}
+            })
+        }
+        localStorage.setItem('Equipes', JSON.stringify(eqp));
+    }
+    let dadosmenu = JSON.parse(localStorage.getItem('Menu'));
+    console.log(dadosmenu.opcMenu);
+
+    menu(dadosmenu.opcMenu, document.getElementById('opc_chose'));
+
+})
+
+function menu(click, main) {
+
+    let Menu = JSON.parse(localStorage.getItem('Menu'));
+    let eqp = JSON.parse(localStorage.getItem('Equipes'));
+
+    if (click == 'Equipes') {
+        let Equipes = ``;
+
+        eqp.forEach(e => {
+            Equipes += `<span id='${e.id}' onclick="Line(this.id)">${e.nome}</span>`
+        })
+
+        main.innerHTML = Equipes;
+        document.getElementById(opcClass[0]).classList.add('opc_ativ');
+        document.getElementById(opcClass[1]).classList.remove('opc_ativ');
+        document.getElementById(opcClass[2]).classList.remove('opc_ativ');
+
+        Menu.opcMenu = click;
+        localStorage.setItem('Menu', JSON.stringify(Menu));
+        Line(Menu.opcLine); 
+    }
+    else if (click == 'Jogadores') {
+
+        let Equipes = ``;
+
+        eqp.forEach(e => {
+            Equipes += `<span id='${e.id}' onclick="TblPlayers(this.id)">${e.nome}</span>`
+        })
+
+        main.innerHTML = Equipes;
+
+        document.getElementById(opcClass[0]).classList.remove('opc_ativ');
+        document.getElementById(opcClass[1]).classList.add('opc_ativ');
+        document.getElementById(opcClass[2]).classList.remove('opc_ativ');
+        
+        Menu.opcMenu = click;
+        localStorage.setItem('Menu', JSON.stringify(Menu));
+        TblPlayers(Menu.opcLine);
+    }
+    else {
+        document.getElementById(opcClass[0]).classList.remove('opc_ativ');
+        document.getElementById(opcClass[1]).classList.remove('opc_ativ');
+        document.getElementById(opcClass[2]).classList.add('opc_ativ');
+        console.log(click);
+
+        Menu.opcMenu = click;
+        localStorage.setItem('Menu', JSON.stringify(Menu));
+        Tabela();
+        main.innerHTML = '';
+    }
+
+    
+}
+function Line(click) {
+
+    let Menu = JSON.parse(localStorage.getItem('Menu'));
+    let Equipes = JSON.parse(localStorage.getItem('Equipes'));
+
+    Equipes.forEach(e => {
+        if (e.id == click) {
+            document.getElementById(e.id).classList.add('line_ativ');
+        }
+        else {
+            document.getElementById(e.id).classList.remove('line_ativ');
+        }
+    })
+
+    let main = document.getElementById('main');
+
+    if (Menu.opcMenu == 'Equipes') {
+        let bodytable = ``;
+        for (let i = 0; i < Menu.quedas; i++) {
+            bodytable += `
+                <tr>
+                    <td>#${i + 1}</td>
+                    <td><input type="text" id="p${i + 1}" oninput="ValidarPontos(this, a${i + 1}, r${i + 1}, res)"></td>
+                    <td><input type="text" id="a${i + 1}" oninput="ValidarPontos(p${i + 1}, this, r${i + 1}, res)"></td>
+                    <td id="r${i + 1}"></td>
+                </tr>
+            `;
+        }
+        main.innerHTML = `
+            <table class="pontuacao">
+                <thead>
+                    <tr>
+                        <td>Line</td>
+                        <td colspan="3"><input id="NameLine" type="text" oninput="RenomearLine(this.value)"></td>
+                    </tr>
+                    <tr>
+                        <td>Quedas</td>
+                        <td>Posição</td>
+                        <td>Abates</td>
+                        <td>Pontos</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${bodytable}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Total</td>
+                        <td id="res"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+
+        Equipes.forEach(e => {
+            if (e.id == click) {
+                document.getElementById('NameLine').value = e.nome.includes('Line') ? '' : e.nome;
+                let t = 0;
+                for (let i = 0; i < Menu.quedas; i++) {
+                    let p = 0;
+                    document.getElementById(`p${i +1}`).value = e[`q${i+1}`] != 0 ? e[`q${i+1}`] : '';
+                    document.getElementById(`a${i+1}`).value = e[`a${i+1}`] != 0 ? e[`a${i+1}`] : '';
+
+                    if (i == 4) {
+                        p += e[`q${i +1}`] == 1 ? ((12 * 2) + (e[`a${i +1}`] * 2)) : e[`q${i +1}`] > 10 || e[`q${i +1}`] == 0 ? (e[`a${i +1}`] * 2) : ((11 - e[`q${i +1}`]) * 2) + (e[`a${i + 1}`] * 2);
+                    }
+                    else {
+                        p += e[`q${i +1}`] == 1 ? 12 + e[`a${i +1}`] : e[`q${i +1}`] > 10 || e[`q${i +1}`] == 0 ? e[`a${i +1}`] : 11 - e[`q${i +1}`] + e[`a${i +1}`];
+                    }
+                    document.getElementById(`r${i + 1}`).innerText = p;
+                    t += p;
+                    document.getElementById('res').innerText = t;
+                }
+            }
+        })
+    }
+    Menu.opcLine = click;
+    localStorage.setItem('Menu', JSON.stringify(Menu));
+}
+function TblPlayers(click) {
+    
+    let main = document.getElementById('main');
+    let Menu = JSON.parse(localStorage.getItem('Menu'));
+    let Equipes = JSON.parse(localStorage.getItem('Equipes'));
+    
+    main.innerHTML = '';
+
+    Equipes.forEach(e => {
+        if (e.id == click) {
+            document.getElementById(e.id).classList.add('line_ativ');
+        }
+        else {
+            document.getElementById(e.id).classList.remove('line_ativ');
+        }
+    })
+
+
+    let tbodytable = '';
+
+    for (let i = 1; i <= 5; i++) {
+        tbodytable += `
+            <tr>
+                <td><input type=text id=p${i} oninput="DadosPlayers('Name', this)"></td>
+                <td><input type=number id=p${i}q1 oninput="DadosPlayers('Kill', this, p${i})"></td>
+                <td><input type=number id=p${i}q2 oninput="DadosPlayers('Kill', this, p${i})"></td>
+                <td><input type=number id=p${i}q3 oninput="DadosPlayers('Kill', this, p${i})"></td>
+                <td><input type=number id=p${i}q4 oninput="DadosPlayers('Kill', this, p${i})"></td>
+                <td><input type=number id=p${i}q5 oninput="DadosPlayers('Kill', this, p${i})"></td>
+            </tr>
+        `;
+    }
+
+    main.innerHTML = `
+        <table class=abates>
+            <thead>
+                <tr>
+                    <td colspan=6>Abates Individuais</td>
+                </tr>
+                <tr>
+                    <td>Players</td>
+                    <td>Queda 01</td>
+                    <td>Queda 02</td>
+                    <td>Queda 03</td>
+                    <td>Queda 04</td>
+                    <td>Queda 05</td>
+                </tr>
+            </thead>
+            <tbody>
+                ${tbodytable}
+            </tbody>
+        </table>
+    `;
+
+    Equipes.forEach(l => {
+        if (l.id == click) {
+            for (let x = 1; x <= 5; x++){
+                if (l.jogadores[`p${x}`] != undefined) {
+                    document.getElementById(`p${x}`).value = l.jogadores[`p${x}`].nome;
+
+                    for(let y = 1; y <= 5; y++){
+                        document.getElementById(`p${x}q${y}`).value = l.jogadores[`p${x}`][`k${y}`] != 0 ? l.jogadores[`p${x}`][`k${y}`] : '';    
+                    }
+                }
+            }
+        }
+    })
+
+    Menu.opcLine = click;
+    localStorage.setItem('Menu', JSON.stringify(Menu));
+    localStorage.setItem('Equipes', JSON.stringify(Equipes));
+
+}
+function DadosPlayers(acao, inp, p) {   
+    let Eqp = JSON.parse(localStorage.getItem('Equipes'));
+    let Menu = JSON.parse(localStorage.getItem('Menu'));
+
+    if (acao == 'Name') {
+        console.log('Nome e = ', inp.value)
+        Eqp.forEach(l => {
+            if (l.id == Menu.opcLine) {
+                    
+                if (l.jogadores[inp.id] != undefined) {
+                    console.log('exist');
+                    l.jogadores[inp.id].nome = inp.value;
+                }
+                else {
+                    l.jogadores[inp.id] = {
+                        id: inp.id,
+                        nome: inp.value,
+                        k1: 0,
+                        k2: 0,
+                        k3: 0,
+                        k4: 0,
+                        k5: 0,
+                        kTotal: 0
+                    }
+                }
+
+            }
+        })
+    }
+    else {
+        Eqp.forEach(l => {
+            if (l.id == Menu.opcLine) {
+                if (l.jogadores[p.id] != undefined) {
+                    l.jogadores[p.id][`k${inp.id.slice(-1)}`] = inp.value != '' ? parseInt(inp.value) : 0;
+
+                    let kT = 0;
+                    for (let x = 1; x <= 5; x++){
+                        kT += parseInt(l.jogadores[p.id][`k${x}`]);
+                    }
+                    l.jogadores[p.id].kTotal = kT;
+                }
+                else {
+                    l.jogadores[p.id] = {
+                        id: p.id,
+                        nome: '',
+                        k1: 0,
+                        k2: 0,
+                        k3: 0,
+                        k4: 0,
+                        k5: 0,
+                        kTotal: 0
+                    }
+                    l.jogadores[p.id][`k${p.id.slice(-1)}`] = inp.value != '' ? parseInt(inp.value) : 0;
+                }
+            }
+        })
+    }
+    localStorage.setItem('Equipes', JSON.stringify(Eqp));
+    localStorage.setItem('Menu', JSON.stringify(Menu));
+}
+function RenomearLine(inp) {
+    let Equipes = JSON.parse(localStorage.getItem('Equipes'));
+    let Menu = JSON.parse(localStorage.getItem('Menu'));
+
+    Equipes.forEach(e => {
+        if (e.id == Menu.opcLine) {
+            e.nome = inp != '' ? inp : e.id.replace('l', 'Line ');
+            document.getElementById(e.id).innerText = inp != '' ? inp : e.id.replace('l', 'Line ');
+        }
+    })
+
+    localStorage.setItem('Equipes', JSON.stringify(Equipes));
+}
+
+function ValidarPontos(p, a, r, t) {
+    let posicao = p.value != '' ? parseInt(p.value) : 0;
+    let abates = a.value != '' ? parseInt(a.value) : 0;
+
+    let eqp = JSON.parse(localStorage.getItem('Equipes'));
+    let men = JSON.parse(localStorage.getItem('Menu'));
+
+    if (p.id.includes(5)) {
+        console.log(p);
+        r.innerText = posicao == 1 ? ((12 * 2) + (abates * 2)) : posicao > 10 || posicao == 0 ? (abates * 2) : ((11 - posicao) * 2) + (abates * 2);
+    }
+    else {
+        r.innerText = posicao == 1 ? 12 + abates : posicao > 10 || posicao == 0 ? abates : 11 - posicao + abates;
+    }
+
+    let res = 0;
+    let kills = 0;
+    for (let q = 1; q <= men.quedas; q++) {
+        res += document.getElementById(`r${q}`).innerText != '' ? parseInt(document.getElementById(`r${q}`).innerText) : 0;
+        kills += document.getElementById(`a${q}`).value != '' ? parseInt(document.getElementById(`a${q}`).value) : 0;
+    }
+    
+    t.innerText = res;
+
+    eqp.forEach(e => {
+        if (e.id == men.opcLine) {
+            e[r.id.replace('r', 'q')] = posicao;
+            e[r.id.replace('r', 'a')] = abates;
+            e.total = res;
+            e.abt = kills;
+        }
+    })
+
+    localStorage.setItem('Equipes', JSON.stringify(eqp));
+    localStorage.setItem('Menu', JSON.stringify(men));
+}
+function Tabela() {
+    let tabela = JSON.parse(localStorage.getItem('Equipes'));
+    let playersKill = [];
+
+    tabela.sort((a, b) => {
+        if (a.total == b.total) {
+            return b.abt - a.abt
+        }
+        else {
+            return b.total - a.total
+        }
+    })
+    playersKill.sort((a, b) => {
+        return b.Kills - a.Kills
+    })
+    let main = document.getElementById('main');
+    main.classList = 'tabela'
+    let tr = ``;
+    let count = 0;
+    tabela.forEach(line => {
+        count++;
+        let a = 0;
+        for (let i = 0; i < 5; i++) {
+            a += line[`a${i + 1}`];
+        }
+        tr += `
+            <tr>
+                <td># ${count}</td>
+                <td>${line.nome}</td>
+                <td>${line.total - a}</td>
+                <td>${a}</td>
+                <td>${line.total}</td>
+            </tr>
+        `;
+
+        for (let i = 1; i <= 5; i++) {
+            let player = {};
+            if (line.jogadores[`p${i}`] != undefined) {
+                player.Nick = line.jogadores[`p${i}`].nome;
+                player.Kills = line.jogadores[`p${i}`].kTotal;
+                playersKill.push(player);
+            }
+        }
+    })
+    main.innerHTML = `
+        <table class="pontos">
+            <thead>
+                <tr>
+                    <td colspan="5">X-TREINO DOOM FORCE</td>
+                </tr>
+                <tr>
+                    <td>Rank</td>
+                    <td>Equipes</td>
+                    <td>Pontos</td>
+                    <td>Kills</td>
+                    <td>Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                ${tr}
+            </tbody>
+        </table>
+
+        <br>
+
+        <table class="pontos">
+            <thead>
+                <tr>
+                    <td colspan="2">Abates Individuais</td>
+                </tr>
+                <tr>
+                    <td>Player</td>
+                    <td>Abates</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id=Nick1></td>
+                    <td id=Kill1></td>
+                </tr>
+                <tr>
+                    <td id=Nick2></td>
+                    <td id=Kill2></td>
+                </tr>
+                <tr>
+                    <td id=Nick3></td>  
+                    <td id=Kill3></td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <span class=remvTbl onclick=del()>Remover dados de Tabela</span>
+    `;
+
+    let count2 = 0;
+    playersKill.forEach(p => {
+        count2++;
+        if (count2 <= 3) {
+            document.getElementById(`Nick${count2}`).innerText = p.Nick;
+            document.getElementById(`Kill${count2}`).innerText = p.Kills;
+        }
+    })
+
+}
+function del(){
+    let conf = confirm("Você tem certeza que deseja remover os dados da tabela?");
+    if(conf){
+        localStorage.clear();
+        window.location.reload();
+    }
+}
+    </script>
+</body>
+</html>
