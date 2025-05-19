@@ -560,9 +560,6 @@ function Tabela() {
             return b.total - a.total
         }
     })
-    playersKill.sort((a, b) => {
-        return b.Kills - a.Kills
-    })
     let main = document.getElementById('main');
     main.classList = 'tabela'
     let tr = ``;
@@ -591,6 +588,9 @@ function Tabela() {
                 playersKill.push(player);
             }
         }
+    })
+    playersKill.sort((a, b) => {
+        return b.Kills - a.Kills
     })
     main.innerHTML = `
         <table class="pontos">
